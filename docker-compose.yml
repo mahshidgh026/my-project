@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  attendance-backend:
+    build: .
+    container_name: school_attendance_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - JWT_SECRET=arvan_school_attendance_secret_key_2026_girls_elem
+      - DB_FILE=/app/data/database.sqlite
+    volumes:
+      - ./data:/app/data
