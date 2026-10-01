@@ -9,7 +9,10 @@ import '../models/dashboard_summary_model.dart';
 
 class ApiService {
   // ArvanCloud Server URL
-  static String baseUrl = 'http://85.198.51.92:5000/api';
+  static String baseUrl = const String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:5000/api',
+  );
   
   static const String tokenKey = 'arvan_auth_token';
   static const String userKey = 'arvan_cached_user';

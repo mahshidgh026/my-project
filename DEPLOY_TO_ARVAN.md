@@ -21,13 +21,16 @@ ssh root@YOUR_ARVAN_SERVER_IP
 ```bash
 mkdir -p /opt/school-attendance
 cd /opt/school-attendance
+git clone https://github.com/mahshidgh026/my-project.git .
+cp backend/.env.example backend/.env
+# مقدار JWT_SECRET را در backend/.env با یک مقدار تصادفی قوی عوض کنید
 ```
 
 ۳. با اجرای دستور زیر با Docker Compose کانتینر را اجرا کنید:
 ```bash
 docker compose up -d --build
 ```
-سرور شما روی پورت `5000` به صورت پس‌زمینه و همیشه روشن فعال خواهد شد.
+سرور شما روی پورت داخلی `5000` به صورت پس‌زمینه و همیشه روشن فعال خواهد شد. پورت `5000` را عمومی نکنید؛ دامنه باید از طریق reverse proxy یا Cloud Proxy آروان به آن وصل شود.
 
 ---
 
@@ -44,7 +47,10 @@ sudo npm install -g pm2
 
 ۲. نصب پکیج‌ها و راه‌اندازی سرور با مدیریت دائمی PM2:
 ```bash
-cd /opt/school-attendance/backend
+cd /opt/school-attendance
+cp backend/.env.example backend/.env
+# مقدار JWT_SECRET را در backend/.env با یک مقدار تصادفی قوی عوض کنید
+cd backend
 npm install --omit=dev
 pm2 start server.js --name "school-backend"
 pm2 save
@@ -52,6 +58,16 @@ pm2 startup
 ```
 
 ---
+
+> **نکته:** فایل‌های قدیمی `setup-server.sh` و `deploy_to_server.sh` از مخزن حذف شده‌اند؛ آن‌ها مربوط به معماری قبلی بودند. برای نسخه فعلی از Docker Compose یا اجرای مستقیم `backend/server.js` استفاده کنید.
+
+## 🧪 بررسی استقرار
+
+پس از اجرای سرویس، این آدرس باید پاسخ `status: ok` بدهد:
+
+```bash
+curl http://127.0.0.1:5000/api/health
+```
 
 ## 🔒 راه‌اندازی دامنه و HTTPS رایگان (SSL) روی آروان
 
@@ -68,7 +84,7 @@ pm2 startup
 ### راهکار اول (از داخل کد):
 در فایل `frontend/lib/services/api_service.dart`، متغیر `baseUrl` را تغییر دهید:
 ```dart
-static String baseUrl = 'https://school-api.yourdomain.ir/api';
+static String baseUrl = const String.fromEnvironment('API_BASE_URL');
 // یا با IP مستقیم:
 // static String baseUrl = 'http://185.x.x.x:5000/api';
 ```
@@ -78,16 +94,9 @@ static String baseUrl = 'https://school-api.yourdomain.ir/api';
 
 ---
 
-## 👥 اطلاعات حساب‌های کاربری تستی پیش‌فرض (جهت بررسی)
+## 👥 ایجاد حساب اولیه
 
-در اولین اجرای سرور، کلاس‌ها و کاربران زیر به همراه دانش‌آموزان دخترانه به طور خودکار ساخته می‌شوند:
-
-| نقش | نام کاربر | شماره موبایل | رمز عبور | دسترسی |
-| :--- | :--- | :--- | :--- | :--- |
-| **مدیر دبستان** | خانم دکتر مهدوی | `09121111111` | `123456` | داشبورد کل مدرسه، درصد حضور، لیست غایبین و آمار کلاس‌ها |
-| **معاون آموزشی** | خانم کمالی | `09122222222` | `123456` | نظارت کامل بر حضور و غیاب کل مدرسه |
-| **معلم پایه اول** | خانم احمدی (اول یاس) | `09123333333` | `123456` | ثبت و ویرایش حضور غیاب کلاسی پایه اول |
-| **معلم پایه دوم** | خانم رضایی (دوم شکوفه) | `09124444444` | `123456` | ثبت و ویرایش حضور غیاب کلاسی پایه دوم |
+فایل `backend/school_data.json` در مخزن به‌صورت خالی نگه داشته شده و حساب پیش‌فرض ندارد. بعد از استقرار، یک حساب مدیر را از مسیر ثبت‌نام وب‌پرتال ایجاد کنید و سپس اطلاعات دسترسی را در اختیار کاربران قرار دهید.
 
 ---
 
@@ -105,6 +114,6 @@ flutter pub get
 
 ۳. اجرای برنامه روی شبیه‌ساز، مرورگر یا گوشی:
 ```bash
-flutter run
+flutter run --dart-define=API_BASE_URL=https://api.example.com/api
 ```
 یا کافی است این پوشه را در **VS Code** یا **Android Studio** باز کرده و دکمه **Run** را بزنید.
