@@ -42,15 +42,11 @@ sudo apt-get install -y nodejs
 sudo npm install -g pm2
 ```
 
-۲. رفتن به پوشه بک‌اند و نصب پکیج‌ها:
+۲. نصب پکیج‌ها و راه‌اندازی سرور با مدیریت دائمی PM2:
 ```bash
 cd /opt/school-attendance/backend
-npm install
-```
-
-۳. راه‌اندازی سرور با مدیریت دائمی PM2:
-```bash
-pm2 start src/server.js --name "school-backend"
+npm install --omit=dev
+pm2 start server.js --name "school-backend"
 pm2 save
 pm2 startup
 ```

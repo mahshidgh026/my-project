@@ -4,24 +4,21 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
-# Install build dependencies for sqlite3
+# Install build dependencies for native modules
 RUN apk add --no-cache python3 make g++
 
-# Copy package files
-COPY package*.json ./
+# Install backend dependencies
+COPY backend/package*.json ./
+RUN npm ci --omit=dev
 
-# Install production dependencies
-RUN npm ci --only=production
+# Copy backend source/data and the web portal served by the backend
+COPY backend ./backend
+COPY web_portal ./web_portal
 
-# Copy application source
-COPY . .
-
-# Expose port
+# Expose the API port
 EXPOSE 5000
 
-# Set environment
 ENV NODE_ENV=production
 ENV PORT=5000
 
-# Start server
-CMD ["node", "src/server.js"]
+CMD ["node", "backend/server.js"]
