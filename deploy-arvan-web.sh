@@ -1692,8 +1692,8 @@ function saveData(data) {
 
 let db = loadData();
 
-// HTTP Server
-const server = http.createServer((req, res) => {
+// HTTP Server Handler
+const requestHandler = (req, res) => {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -1738,6 +1738,8 @@ const server = http.createServer((req, res) => {
     if ((pathname === '/' || pathname === '/index.html' || pathname === '/admin' || pathname === '/teacher') && (req.method === 'GET' || req.method === 'HEAD')) {
       const candidates = [
         path.join(__dirname, 'index.html'),
+        path.join(__dirname, '../frontend/web_portal/index.html'),
+        // Legacy deployment layout fallback
         path.join(__dirname, '../web_portal/index.html'),
         '/opt/school-attendance/index.html'
       ];
@@ -2016,13 +2018,24 @@ const server = http.createServer((req, res) => {
     // Default 404
     json(404, { message: 'آدرس مورد نظر یافت نشد.' });
   });
+};
+
+const server80 = http.createServer(requestHandler);
+const server5000 = http.createServer(requestHandler);
+
+server80.on('error', (err) => {
+  console.warn('Port 80 warning:', err.message);
+});
+server5000.on('error', (err) => {
+  console.warn('Port 5000 warning:', err.message);
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`====================================================`);
-  console.log(`🌸 سرور مستقل سیستم حضور و غیاب دبستان روی پورت ${PORT} فعال است`);
-  console.log(`🚀 بدون نیاز به npm - کاملاً پایدار و با ذخیره دائمی`);
-  console.log(`====================================================`);
+server80.listen(80, '0.0.0.0', () => {
+  console.log(`🌸 سرور دبستان پرنیان روی پورت 80 (وب) فعال شد`);
+});
+
+server5000.listen(5000, '0.0.0.0', () => {
+  console.log(`🌸 سرور دبستان پرنیان روی پورت 5000 فعال شد`);
 });
 
 EOF_SRV

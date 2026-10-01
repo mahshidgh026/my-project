@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const htmlPath = path.join(__dirname, 'web_portal', 'index.html');
+const htmlPath = path.join(__dirname, 'frontend', 'web_portal', 'index.html');
 const serverPath = path.join(__dirname, 'backend', 'standalone_server.js');
 
 const html = fs.readFileSync(htmlPath, 'utf8');

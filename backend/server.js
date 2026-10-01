@@ -105,6 +105,8 @@ const requestHandler = (req, res) => {
     if ((pathname === '/' || pathname === '/index.html' || pathname === '/admin' || pathname === '/teacher') && (req.method === 'GET' || req.method === 'HEAD')) {
       const candidates = [
         path.join(__dirname, 'index.html'),
+        path.join(__dirname, '../frontend/web_portal/index.html'),
+        // Legacy deployment layout fallback
         path.join(__dirname, '../web_portal/index.html'),
         '/opt/school-attendance/index.html'
       ];

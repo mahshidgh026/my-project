@@ -13,7 +13,7 @@ RUN npm ci --omit=dev
 
 # Copy backend source/data and the web portal served by the backend
 COPY backend ./backend
-COPY web_portal ./web_portal
+COPY frontend ./frontend
 
 # Expose the API port
 EXPOSE 5000
