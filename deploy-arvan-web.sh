@@ -673,7 +673,7 @@ cat << 'EOF_HTML' > /opt/school-attendance/index.html
   <!-- JAVASCRIPT APPLICATION LOGIC                                   -->
   <!-- ============================================================== -->
   <script>
-    const API_BASE = 'http://85.198.51.92:5000/api';
+    const API_BASE = '/api';
 
     // Application state with ZERO mock data
     const EMPTY_STATE = {
